@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="25887fe5-e612-41fe-8900-5b34fd642208" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DownloaderGUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/DownloaderGUI.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -15,14 +14,15 @@
     <session id="-1522717494">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="8" />
+          <entry key="project.closed" value="9" />
           <entry key="project.open.time.14" value="1" />
           <entry key="project.open.time.3" value="2" />
           <entry key="project.open.time.4" value="1" />
+          <entry key="project.open.time.5" value="1" />
           <entry key="project.open.time.6" value="1" />
           <entry key="project.open.time.7" value="2" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="8" />
+          <entry key="project.opened" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -42,12 +42,12 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="2933" />
+          <entry key="py" value="3830" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="2933" />
+          <entry key="Python" value="3830" />
         </counts>
       </usages-collector>
     </session>
@@ -57,7 +57,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Downloader.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="670">
+            <state relative-caret-position="885">
               <caret line="61" column="26" selection-start-line="61" selection-start-column="26" selection-end-line="61" selection-end-column="26" />
               <folding>
                 <element signature="e#18#31#0" expanded="true" />
@@ -74,12 +74,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/DownloaderGUI.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="23" column="48" selection-start-line="23" selection-start-column="48" selection-end-line="23" selection-end-column="48" />
+            <state relative-caret-position="585">
+              <caret line="39" column="45" lean-forward="true" selection-start-line="39" selection-start-column="45" selection-end-line="39" selection-end-column="45" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
-                <marker date="1538026580125" expanded="true" signature="228:229" ph="..." />
-                <marker date="1538026580125" expanded="true" signature="228:230" ph="..." />
+                <marker date="1538106995739" expanded="true" signature="384:385" ph="..." />
+                <marker date="1538106995739" expanded="true" signature="384:386" ph="..." />
               </folding>
             </state>
           </provider>
@@ -88,8 +88,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" selection-start-line="8" selection-end-line="8" />
+            <state relative-caret-position="240">
+              <caret line="16" selection-start-line="16" selection-end-line="16" />
               <folding>
                 <element signature="e#0#17#0" expanded="true" />
                 <marker date="1537942710107" expanded="true" signature="118:314" ph="..." />
@@ -131,8 +131,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="211" />
-    <option name="y" value="105" />
+    <option name="x" value="439" />
+    <option name="y" value="345" />
     <option name="width" value="1267" />
     <option name="height" value="870" />
   </component>
@@ -244,7 +244,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="211" y="105" width="1267" height="870" extended-state="0" />
+    <frame x="439" y="345" width="1267" height="870" extended-state="0" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24859211" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -285,7 +285,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Downloader.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="670">
+        <state relative-caret-position="885">
           <caret line="61" column="26" selection-start-line="61" selection-start-column="26" selection-end-line="61" selection-end-column="26" />
           <folding>
             <element signature="e#18#31#0" expanded="true" />
@@ -304,8 +304,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" selection-start-line="8" selection-end-line="8" />
+        <state relative-caret-position="240">
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
           <folding>
             <element signature="e#0#17#0" expanded="true" />
             <marker date="1537942710107" expanded="true" signature="118:314" ph="..." />
@@ -315,12 +315,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/DownloaderGUI.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="23" column="48" selection-start-line="23" selection-start-column="48" selection-end-line="23" selection-end-column="48" />
+        <state relative-caret-position="585">
+          <caret line="39" column="45" lean-forward="true" selection-start-line="39" selection-start-column="45" selection-end-line="39" selection-end-column="45" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
-            <marker date="1538026580125" expanded="true" signature="228:229" ph="..." />
-            <marker date="1538026580125" expanded="true" signature="228:230" ph="..." />
+            <marker date="1538106995739" expanded="true" signature="384:385" ph="..." />
+            <marker date="1538106995739" expanded="true" signature="384:386" ph="..." />
           </folding>
         </state>
       </provider>
