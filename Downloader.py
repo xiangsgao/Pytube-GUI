@@ -26,6 +26,10 @@ class Downloader:
 
     # dipplasy download choices
     def display_download_choices(self):
+        if not self.yt_set():
+            print('need to set url first\n')
+            return
+
         self.__vids = self.__yt.streams.all()
         choice_list = [None] * len(self.__vids)
         for i in range(len(self.__vids)):
@@ -38,7 +42,7 @@ class Downloader:
 
 
     # checks if the url is set
-    def all_set(self):
+    def yt_set(self):
         return self.__yt is not None
 
     # Returns the default downloads path for linux or windows
@@ -55,11 +59,12 @@ class Downloader:
 
     # last step, download
     def download(self):
-        if not self.all_set():
+        if not self.yt_set():
             print("\nneed to set url")
             return False
-        self.__vids[self.__choice].download(self.__directory)
 
+        self.__vids[self.__choice].download(self.__directory)
+        self.__vids = self.__yt.streams.all()
         # this converts the mp4 video tp mp3 then delete the mp4 if the mp3 mode is on
         if self.__mp3_mode is True:
             downloaded_file_name = self.__vids[self.__choice].default_filename
@@ -77,7 +82,7 @@ class Downloader:
 
 if __name__ == '__main__':
  downloader = Downloader()
- downloader.set_url('https://www.youtube.com/watch?v=9tzyJEwO9Os&index=3&list=PLoYCgNOIyGAB_8_iq1cL8MVeun7cB6eNc')
+ downloader.set_url('https://www.youtube.com/watch?v=tq7dqdHCc7U&index=6&list=PLoYCgNOIyGAB_8_iq1cL8MVeun7cB6eNc')
  downloader.mp3_mode_on(False)
  print(downloader.display_download_choices())
  downloader.set_video_choice(0)
