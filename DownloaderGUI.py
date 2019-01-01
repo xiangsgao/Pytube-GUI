@@ -8,16 +8,20 @@ from PyQt5.QtWidgets import QCheckBox
 from Downloader import Downloader
 from PyQt5.QtWidgets import QLabel
 
-class Downloader_Main_Window(QMainWindow):
+class DownloaderMainWindow(QMainWindow):
 
-    def __init__(self,   download_manager=Downloader):
+    def __init__(self,   download_manager=Downloader()):
         super().__init__()
         self.setWindowTitle("PyTube Downloader")
         self.__download_manager = download_manager
         self.__ui = self.UI(self)
+
+        # makes sure the downloaded directory can't not be manually edited. This ensures the user chooses a valid path with browse button
+        self.__ui.dir_line_edit.setText(self.__download_manager.get_download_directory())
+        self.__ui.dir_line_edit.setReadOnly(True)
         self.setCentralWidget(self.__ui)
         # this autoresizes
-        #self.resize(self.layout().sizeHint())
+        # self.resize(self.layout().sizeHint())
 
 
     class UI(QWidget):
@@ -30,24 +34,26 @@ class Downloader_Main_Window(QMainWindow):
 
 
         def init_gui(self):
-            self.Hbox1 = QHBoxLayout()
-            self.pasteLabel = QLabel('Paste Web page here: ')
-            self.urlLineEdit = QLineEdit()
-            self.urlLineEdit.setMaximumWidth(300);
-            self.urlLineEdit.setFixedWidth(310);
-            self.Hbox1.addWidget(self.pasteLabel)
-            self.Hbox1.addWidget(self.urlLineEdit)
-            self.layout.addLayout(self.Hbox1)
-            self.Hbox2 = QHBoxLayout()
-            self.dirLineEdit = QLineEdit()
-            self.browseButton = QPushButton('Browse')
-            self.Hbox2.addWidget(self.dirLineEdit)
-            self.Hbox2.addWidget(self.browseButton)
-            self.layout.addLayout(self.Hbox2)
-            self.Hbox3 = QHBoxLayout()
+            self.h_box1 = QHBoxLayout()
+            self.paste_label = QLabel('Paste Web page here: ')
+            self.url_line_edit = QLineEdit()
+            self.url_line_edit.setMaximumWidth(300);
+            self.url_line_edit.setFixedWidth(310);
+            self.h_box1.addWidget(self.paste_label)
+            self.h_box1.addWidget(self.url_line_edit)
+            self.layout.addLayout(self.h_box1)
+
+            self.h_box2 = QHBoxLayout()
+            self.dir_line_edit = QLineEdit()
+            self.browse_button = QPushButton('Browse')
+            self.h_box2.addWidget(self.browse_button)
+            self.h_box2.addWidget(self.dir_line_edit)
+            self.layout.addLayout(self.h_box2)
+
+            self.h_box3 = QHBoxLayout()
             self.checkbox = QCheckBox('mp3 only')
-            self.downloadButton = QPushButton('Download')
-            self.Hbox3.addStretch(1);
-            self.Hbox3.addWidget(self.checkbox)
-            self.Hbox3.addWidget(self.downloadButton)
-            self.layout.addLayout(self.Hbox3)
+            self.download_button = QPushButton('Download')
+            self.h_box3.addStretch(1);
+            self.h_box3.addWidget(self.checkbox)
+            self.h_box3.addWidget(self.download_button)
+            self.layout.addLayout(self.h_box3)

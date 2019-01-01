@@ -1,6 +1,5 @@
 import pytube
 import os
-import subprocess
 
 class Downloader:
 
@@ -9,7 +8,7 @@ class Downloader:
         self.__yt = None
         self.__choice = 0
         self.__mp3_mode = False
-        self.__directory = self.get_download_path()
+        self.__directory = self.__get_default_download_path()
         self.__vids = None
 
     # sets the video to download by its url
@@ -20,11 +19,11 @@ class Downloader:
     def set_download_directory(self, directory):
         self.__directory = directory
 
-    #sets if the just downlaod mp3
+    # sets if the just download mp3
     def mp3_mode_on(self, value):
         self.__mp3_mode = value
 
-    # dipplasy download choices
+    # displays download choices
     def display_download_choices(self):
         if not self.yt_set():
             print('need to set url first\n')
@@ -40,13 +39,15 @@ class Downloader:
     def set_video_choice(self, choice):
         self.__choice = choice
 
+    def get_download_directory(self):
+        return self.__directory
 
     # checks if the url is set
     def yt_set(self):
         return self.__yt is not None
 
     # Returns the default downloads path for linux or windows
-    def get_download_path(self):
+    def __get_default_download_path(self):
         if os.name == 'nt':
             import winreg
             sub_key = r'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders'
@@ -67,13 +68,13 @@ class Downloader:
         self.__vids = self.__yt.streams.all()
         # this converts the mp4 video tp mp3 then delete the mp4 if the mp3 mode is on
         if self.__mp3_mode is True:
-            downloaded_file_name = self.__vids[self.__choice].default_filename
-            new_filename = downloaded_file_name[:-4] + '.mp3'
-            subprocess.run(['ffmpeg', '-i',  # or subprocess.run (Python 3.5+)
-                            os.path.join(self.__directory, downloaded_file_name),
-                            os.path.join(self.__directory, new_filename)
-                            ])
-            subprocess.run(['rm', os.path.join(self.__directory, downloaded_file_name)])
+            downloaded_file = os.path.join(self.__directory, self.__vids[self.__choice].default_filename)
+            mp3_file = downloaded_file[:-4] + '.mp3'
+            print(downloaded_file)
+            print(mp3_file)
+            os.rename(downloaded_file, mp3_file)
+            # below is for removing the original mp4, doesn't need becuase we are just gonna rename the file to mp3 instead of actually converting
+            # subprocess.run(['rm', os.path.join(self.__directory, downloaded_file)])
         return True
 
 
@@ -81,9 +82,9 @@ class Downloader:
 
 
 if __name__ == '__main__':
- downloader = Downloader()
- downloader.set_url('https://www.youtube.com/watch?v=tq7dqdHCc7U&index=6&list=PLoYCgNOIyGAB_8_iq1cL8MVeun7cB6eNc')
- downloader.mp3_mode_on(False)
- print(downloader.display_download_choices())
- downloader.set_video_choice(0)
- downloader.download()
+    downloader = Downloader()
+    downloader.set_url('https://www.youtube.com/watch?v=gqJG2QFbgfg')
+    downloader.mp3_mode_on(True)
+    print(downloader.display_download_choices())
+    downloader.set_video_choice(0)
+    downloader.download()

@@ -1,12 +1,11 @@
 import Downloader
-from DownloaderGUI import Downloader_Main_Window
+from DownloaderGUI import DownloaderMainWindow
 from PyQt5 import QtWidgets
 import sys
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    downloader_manager = Downloader.Downloader()
-    window = Downloader_Main_Window(downloader_manager)
+    window = DownloaderMainWindow()
     window.show()
     sys.exit(app.exec())
 
