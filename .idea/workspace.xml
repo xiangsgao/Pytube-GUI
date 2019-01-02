@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="25887fe5-e612-41fe-8900-5b34fd642208" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/DownloaderGUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/DownloaderGUI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Downloader.py" beforeDir="false" afterPath="$PROJECT_DIR$/Downloader.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -12,11 +12,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Downloader.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-124">
-              <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
+            <state relative-caret-position="-821">
+              <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -61,14 +61,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/DownloaderGUI.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="369">
-              <caret line="64" column="45" selection-start-line="64" selection-start-column="45" selection-end-line="64" selection-end-column="45" />
-              <folding>
-                <element signature="e#0#39#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="-1416">
+              <caret line="10" column="39" lean-forward="true" selection-start-line="10" selection-start-column="39" selection-end-line="10" selection-end-column="39" />
             </state>
           </provider>
         </entry>
@@ -76,7 +73,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
+            <state relative-caret-position="68">
               <caret line="7" selection-start-line="7" selection-end-line="7" />
               <folding>
                 <element signature="e#0#17#0" expanded="true" />
@@ -112,8 +109,8 @@
       <list>
         <option value="$PROJECT_DIR$/venv/DownloaderGUI.py" />
         <option value="$PROJECT_DIR$/Main.py" />
-        <option value="$PROJECT_DIR$/Downloader.py" />
         <option value="$PROJECT_DIR$/DownloaderGUI.py" />
+        <option value="$PROJECT_DIR$/Downloader.py" />
       </list>
     </option>
   </component>
@@ -256,13 +253,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19328263" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19328263" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3243607" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3243607" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -321,15 +319,9 @@
       </provider>
       <provider editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/venv/pyvenv.cfg">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/venv/pip-selfcheck.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/Main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
+        <state relative-caret-position="68">
           <caret line="7" selection-start-line="7" selection-end-line="7" />
           <folding>
             <element signature="e#0#17#0" expanded="true" />
@@ -337,23 +329,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DownloaderGUI.py">
+    <entry file="file://$PROJECT_DIR$/venv/pyvenv.cfg">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/pip-selfcheck.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Downloader.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="369">
-          <caret line="64" column="45" selection-start-line="64" selection-start-column="45" selection-end-line="64" selection-end-column="45" />
+        <state relative-caret-position="-821">
+          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
           <folding>
-            <element signature="e#0#39#0" expanded="true" />
+            <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Downloader.py">
+    <entry file="file://$PROJECT_DIR$/DownloaderGUI.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-124">
-          <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-1416">
+          <caret line="10" column="39" lean-forward="true" selection-start-line="10" selection-start-column="39" selection-end-line="10" selection-end-column="39" />
         </state>
       </provider>
     </entry>
