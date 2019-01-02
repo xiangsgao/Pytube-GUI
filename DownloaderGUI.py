@@ -10,6 +10,7 @@ from Downloader import Downloader
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.Qt import Qt
+from PyQt5.QtWidgets import QFileDialog
 
 class DownloaderMainWindow(QMainWindow):
 
@@ -26,9 +27,10 @@ class DownloaderMainWindow(QMainWindow):
         self.__ui.dir_line_edit.setReadOnly(True)
         self.setCentralWidget(self.__ui)
 
-        # listener for add button and remove button
+        # listener for the buttons
         self.__ui.add_button.clicked.connect(self.add_button_clicked)
         self.__ui.remove_button.clicked.connect(self.remove_button_clicked)
+        self.__ui.browse_button.clicked.connect(self.browse_button_clicked)
 
         # hide the video list and download button because they will be empty
         self.hide_list()
@@ -50,7 +52,7 @@ class DownloaderMainWindow(QMainWindow):
             if (len(self.__ui.video_list.findItems(self.__ui.url_line_edit.text(), Qt.MatchExactly))==0) and (self.__ui.url_line_edit.text() != ""):
                 self.__ui.video_list.addItem(self.__ui.url_line_edit.text())
             else:
-                QMessageBox.about(self, "Alert", "This link is added already or the link is empty")
+                QMessageBox.about(self, "Alert", "This link is added already or the link is invalid")
                 return
             if self.__ui.download_button.isHidden():
                 self.show_list()
@@ -63,6 +65,12 @@ class DownloaderMainWindow(QMainWindow):
             self.__ui.video_list.takeItem(self.__ui.video_list.row(selectedItem))
             self.__ui.video_list.setCurrentItem(None)
             self.__ui.video_list.clearFocus()
+
+    def browse_button_clicked(self):
+         dir = QFileDialog.getExistingDirectory(parent=self, directory=self.__download_manager.get_download_directory(), options=QFileDialog.DontResolveSymlinks)
+         if dir != "":
+            self.__ui.dir_line_edit.setText(dir)
+            self.__download_manager.set_download_directory(dir)
 
 
 
