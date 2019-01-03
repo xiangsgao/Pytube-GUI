@@ -80,7 +80,7 @@ class DownloaderMainWindow(QMainWindow):
             if self.__ui.video_list.count() == 0:
                 self.hide_list()
         finally:
-            print('Finishing worker for ' + name)
+            print('Finishing url parse worker for ' + name)
 
 
     def remove_button_clicked(self):
@@ -89,10 +89,12 @@ class DownloaderMainWindow(QMainWindow):
                 return
             selectedItem = self.__ui.video_list.currentItem()
             self.__ui.video_list.takeItem(self.__ui.video_list.row(selectedItem))
+            self.__download_manager.remove_video(selectedItem.text())
             self.__ui.video_list.setCurrentItem(None)
             self.__ui.video_list.clearFocus()
             if self.__ui.video_list.count() == 0:
                 self.hide_list()
+
 
     def browse_button_clicked(self):
          dir = QFileDialog.getExistingDirectory(parent=self, directory=self.__download_manager.get_download_directory(), options=QFileDialog.DontResolveSymlinks)
