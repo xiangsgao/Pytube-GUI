@@ -16,6 +16,9 @@ class Downloader:
         self.__yt = pytube.YouTube(url)
         video = self.__yt.streams.all()
         key = video[self.__choice].default_filename
+        if key in self.__vids.keys():
+            raise Exception("Already contains the video")
+            return
         self.__vids[key] = video
         return key
 
@@ -30,7 +33,7 @@ class Downloader:
     # displays download choices
     def display_download_choices(self):
         for key, value in self.__vids.items():
-            print("\n" + "------------------------------------------" + key + "------------------------------------------")
+            print("\n" + "<------------------------------------------" + key + "------------------------------------------>")
             for i in range(len(value)):
                 print(str(i), '. ', value[i])
 
@@ -63,14 +66,17 @@ class Downloader:
             print("\nneed to add url")
             raise Exception("No videos in the list")
         for key, value in self.__vids.items():
+            downloaded_file = os.path.join(self.__directory, value[self.__choice].default_filename)
+            mp3_file = downloaded_file[:-4] + '.mp3'
+            print('Downloading ' + downloaded_file + '....')
             value[self.__choice].download(self.__directory)
             # this converts the mp4 video tp mp3 then delete the mp4 if the mp3 mode is on
             if self.__mp3_mode is True:
-                downloaded_file = os.path.join(self.__directory, value[self.__choice].default_filename)
-                mp3_file = downloaded_file[:-4] + '.mp3'
+                print('converting ' + downloaded_file + ' to mp3....')
                 if os.path.exists(mp3_file):
                     os.remove(mp3_file)
                 os.rename(downloaded_file, mp3_file)
+            print('Finished downloading ' + key)
 
                 # below is for removing the original mp4, doesn't need becuase we are just gonna rename the file to mp3 instead of actually converting
                 # subprocess.run(['rm', os.path.join(self.__directory, downloaded_file)])

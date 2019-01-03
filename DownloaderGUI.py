@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QLayout
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtWidgets import QHBoxLayout
@@ -9,10 +9,10 @@ from PyQt5.QtWidgets import QListWidget
 from Downloader import Downloader
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QMessageBox
-from PyQt5.Qt import Qt
 from PyQt5.QtWidgets import QFileDialog
 
 class DownloaderMainWindow(QMainWindow):
+
 
     def __init__(self,   download_manager=Downloader()):
         super().__init__()
@@ -27,17 +27,24 @@ class DownloaderMainWindow(QMainWindow):
         self.__ui.dir_line_edit.setReadOnly(True)
         self.setCentralWidget(self.__ui)
 
-        # listener for the buttons
+        # listener for the widgets
         self.__ui.add_button.clicked.connect(self.add_button_clicked)
         self.__ui.remove_button.clicked.connect(self.remove_button_clicked)
         self.__ui.browse_button.clicked.connect(self.browse_button_clicked)
+        self.__ui.checkbox.clicked.connect(self.mp3_checked_clicked)
+        self.__ui.download_button.clicked.connect(lambda : self.__download_manager.download())
 
         # hide the video list and download button because they will be empty
         self.hide_list()
 
 
-        # this autoresizes
-        # self.resize(self.layout().sizeHint())
+
+
+
+
+
+
+
 
 
     def show_list(self):
@@ -48,14 +55,33 @@ class DownloaderMainWindow(QMainWindow):
         self.__ui.video_list.hide()
         self.__ui.download_button.hide()
 
+
     def add_button_clicked(self):
-            if (len(self.__ui.video_list.findItems(self.__ui.url_line_edit.text(), Qt.MatchExactly))==0) and (self.__ui.url_line_edit.text() != ""):
-                self.__ui.video_list.addItem(self.__ui.url_line_edit.text())
-            else:
-                QMessageBox.about(self, "Alert", "This link is added already or the link is invalid")
-                return
+            self.__ui.video_list.addItem("Parsing url...")
+            item_position =  self.__ui.video_list.count() - 1
+            item = self.__ui.video_list.item(item_position)
+            name = self.__ui.url_line_edit.text()
             if self.__ui.download_button.isHidden():
                 self.show_list()
+            self.__parse_Url_Function(item, name)
+            # will implement multithreading later
+            # thread = threading.Thread(target=self.__parse_Url_Function, name='url parser thread', args=(item, name))
+            # thread.start()
+
+
+    def __parse_Url_Function(self, item, name):
+        print('Starting url parse worker for ' + name)
+        try:
+            item.setText(self.__download_manager.add_video(self.__ui.url_line_edit.text()))
+        except Exception as e:
+            print(str(e))
+            self.__ui.video_list.takeItem(self.__ui.video_list.row(item))
+            QMessageBox.about(self, "Alert", "This link is added already or the link is invalid")
+            if self.__ui.video_list.count() == 0:
+                self.hide_list()
+        finally:
+            print('Finishing worker for ' + name)
+
 
     def remove_button_clicked(self):
             if self.__ui.video_list.currentItem() is None:
@@ -65,12 +91,18 @@ class DownloaderMainWindow(QMainWindow):
             self.__ui.video_list.takeItem(self.__ui.video_list.row(selectedItem))
             self.__ui.video_list.setCurrentItem(None)
             self.__ui.video_list.clearFocus()
+            if self.__ui.video_list.count() == 0:
+                self.hide_list()
 
     def browse_button_clicked(self):
          dir = QFileDialog.getExistingDirectory(parent=self, directory=self.__download_manager.get_download_directory(), options=QFileDialog.DontResolveSymlinks)
          if dir != "":
             self.__ui.dir_line_edit.setText(dir)
             self.__download_manager.set_download_directory(dir)
+
+    def mp3_checked_clicked(self):
+        self.__download_manager.mp3_mode_on(self.__ui.checkbox.isChecked());
+
 
 
 
@@ -80,8 +112,11 @@ class DownloaderMainWindow(QMainWindow):
         def __init__(self, parent):
             super().__init__(parent)
             self.layout = QVBoxLayout()
+            # fixed the size constraint
+            self.layout.setSizeConstraint(QLayout.SetFixedSize);
             self.init_gui()
             self.setLayout(self.layout)
+            self.layoutsize = self.size()
 
 
         def init_gui(self):
