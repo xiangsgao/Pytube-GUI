@@ -1,3 +1,5 @@
+from PyQt5 import QtCore
+from PyQt5.QtCore import QObject
 from PyQt5.QtWidgets import QMainWindow, QLayout
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QVBoxLayout
@@ -10,8 +12,9 @@ from Downloader import Downloader
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QFileDialog
+from CustomThread import CustomThread
 
-class DownloaderMainWindow(QMainWindow):
+class DownloaderMainWindow(QMainWindow, QObject):
 
 
     def __init__(self,   download_manager=Downloader()):
@@ -63,7 +66,11 @@ class DownloaderMainWindow(QMainWindow):
             name = self.__ui.url_line_edit.text()
             if self.__ui.download_button.isHidden():
                 self.show_list()
-            self.__parse_Url_Function(item, name)
+
+
+            self.worker = CustomThread(self.__parse_Url_Function, item, name, CustomThread.URL_PARSE_WORKER_ERROR_MESSAGE)
+            self.worker.start()
+            #self.connect(self.worker, QtCore.SIGNAL(CustomThread.RUN_URL_PARSE_WORKER_SIGNAL), self.worker_error_dialog)
             # will implement multithreading later
             # thread = threading.Thread(target=self.__parse_Url_Function, name='url parser thread', args=(item, name))
             # thread.start()
