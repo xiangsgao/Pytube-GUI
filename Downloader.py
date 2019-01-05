@@ -134,7 +134,7 @@ class Downloader:
         size = len(chunk) + bytes_remaining
         # Gets the percentage of the file that has been downloaded.
         percent = (100 * (size - bytes_remaining)) / size
-        print("{:00.0f}% downloaded".format(percent))
+        print(stream.default_filename + ": {:00.0f}% downloaded".format(percent))
 
 
 
