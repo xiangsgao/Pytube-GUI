@@ -58,7 +58,6 @@ class DownloaderMainWindow(QMainWindow, QObject):
 
     def download_button_clicked(self):
         if len(self.__parsing_waitlist) != 0:
-            print(str(len(self.__parsing_waitlist)))
             QMessageBox.about(self, "Alert", "Wait for urls to finish parsing. Also remove the invalid and duplicated links first.")
             return
         # using native python thread to spun downloads. QThread is a pain in the ass
@@ -66,7 +65,7 @@ class DownloaderMainWindow(QMainWindow, QObject):
         thread.start()
 
     def __download_button_thread_function(self):
-        print('\nStarting download in parallel.....')
+        print('\nStarting download.....')
         # disables all the control until download finishes
         self.__ui.add_button.setEnabled(False)
         self.__ui.remove_button.setEnabled(False)
@@ -85,7 +84,6 @@ class DownloaderMainWindow(QMainWindow, QObject):
         self.__ui.download_button.setEnabled(True)
         self.__ui.download_button.setText('Download')
         self.__ui.checkbox.setEnabled(True)
-        print('\nDone!')
 
 
 
