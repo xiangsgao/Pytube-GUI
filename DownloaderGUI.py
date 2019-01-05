@@ -1,6 +1,6 @@
 from PyQt5 import QtCore
 from PyQt5.QtCore import QObject
-from PyQt5.QtWidgets import QMainWindow, QLayout
+from PyQt5.QtWidgets import QMainWindow, QLayout, QListWidgetItem
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtWidgets import QHBoxLayout
@@ -12,10 +12,13 @@ from Downloader import Downloader
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QFileDialog
-from CustomThread import CustomThread
+from ThreadWorker import ParserWorker
 
 class DownloaderMainWindow(QMainWindow, QObject):
 
+    # the parameters are the type of object to be passed into the function the ui thread is going to execute, in this case just something to modify the widgets
+    # because we can only do so in ui thread
+    PARSE_URL_SIGNAL = QtCore.pyqtSignal(QListWidgetItem, str)
 
     def __init__(self,   download_manager=Downloader()):
         super().__init__()
@@ -35,17 +38,27 @@ class DownloaderMainWindow(QMainWindow, QObject):
         self.__ui.remove_button.clicked.connect(self.remove_button_clicked)
         self.__ui.browse_button.clicked.connect(self.browse_button_clicked)
         self.__ui.checkbox.clicked.connect(self.mp3_checked_clicked)
-        self.__ui.download_button.clicked.connect(lambda : self.__download_manager.download())
+        self.__ui.download_button.clicked.connect(self.download_button_clicked)
 
         # hide the video list and download button because they will be empty
         self.hide_list()
 
+        # connecting the signal with this parse_url_function so whenever it is emitted from another thread, this function will be executed in the ui thread.
+        self.PARSE_URL_SIGNAL.connect(self.set_list_widget_text)
+        self.__threads = []
+        self.__parsing_waitlist = []
 
 
 
 
 
 
+    def download_button_clicked(self):
+        if len(self.__parsing_waitlist) != 0:
+            print(str(len(self.__parsing_waitlist)))
+            QMessageBox.about(self, "Alert", "Wait for urls to finish parsing and remove the invalid links")
+            return
+        self.__download_manager.download()
 
 
 
@@ -67,28 +80,32 @@ class DownloaderMainWindow(QMainWindow, QObject):
             if self.__ui.download_button.isHidden():
                 self.show_list()
 
+            # add the video to the wait list so download button knows if its url is invalid or still waiting to be parse
+            self.__parsing_waitlist.append(item)
 
-            self.worker = CustomThread(self.__parse_Url_Function, item, name, CustomThread.URL_PARSE_WORKER_ERROR_MESSAGE)
-            self.worker.start()
-            #self.connect(self.worker, QtCore.SIGNAL(CustomThread.RUN_URL_PARSE_WORKER_SIGNAL), self.worker_error_dialog)
-            # will implement multithreading later
-            # thread = threading.Thread(target=self.__parse_Url_Function, name='url parser thread', args=(item, name))
-            # thread.start()
+            # creating the parser worker which can emit signals for ui thead to update widgets, also need to scope it to an instance else thread will malfunction lol, fuck python
+            self.worker = ParserWorker(item, name, self)
+            # creating thread object
+            thread = QtCore.QThread()
+            # add threads to the thread list because pyqt5 will annoyingly destroy ui thread if the thread object is garbabged collected cuz these threads do not die for some reason
+            self.__threads.append(thread)
+            # moved worker to a thread so workers work is multithreaded
+            self.worker.moveToThread(thread)
+            # have thread execute worker's work whenever it is started
+            thread.started.connect(self.worker.run)
+            # start the worker
+            thread.start()
 
 
-    def __parse_Url_Function(self, item, name):
-        print('Starting url parse worker for ' + name)
-        try:
-            item.setText(self.__download_manager.add_video(self.__ui.url_line_edit.text()))
-        except Exception as e:
-            print(str(e))
-            self.__ui.video_list.takeItem(self.__ui.video_list.row(item))
-            QMessageBox.about(self, "Alert", "This link is added already or the link is invalid")
-            if self.__ui.video_list.count() == 0:
-                self.hide_list()
-        finally:
-            print('Finishing url parse worker for ' + name)
+    def parse_Url_Function(self, item, url):
+        video_name = self.__download_manager.add_video(url)
+        # remove the video from the wait list because its link is successfully parsed
+        print('url parsing is successful!')
+        self.__parsing_waitlist.remove(item)
+        return video_name
 
+    def set_list_widget_text(self, item, text):
+        item.setText(text)
 
     def remove_button_clicked(self):
             if self.__ui.video_list.currentItem() is None:
@@ -97,6 +114,8 @@ class DownloaderMainWindow(QMainWindow, QObject):
             selectedItem = self.__ui.video_list.currentItem()
             self.__ui.video_list.takeItem(self.__ui.video_list.row(selectedItem))
             self.__download_manager.remove_video(selectedItem.text())
+            if selectedItem in self.__parsing_waitlist:
+                self.__parsing_waitlist.remove(selectedItem)
             self.__ui.video_list.setCurrentItem(None)
             self.__ui.video_list.clearFocus()
             if self.__ui.video_list.count() == 0:
@@ -131,7 +150,7 @@ class DownloaderMainWindow(QMainWindow, QObject):
         def init_gui(self):
             # set up first h box items
             self.h_box1 = QHBoxLayout()
-            self.paste_label = QLabel('Paste Web page here: ')
+            self.paste_label = QLabel('Paste the youtube url here: ')
             self.url_line_edit = QLineEdit()
             self.url_line_edit.setMaximumWidth(300);
             self.url_line_edit.setFixedWidth(310);

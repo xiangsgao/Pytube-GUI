@@ -23,7 +23,7 @@ class Downloader:
         return key
 
     def remove_video(self, video):
-        self.__vids.pop(video)
+        self.__vids.pop(video, None)
 
     # sets a custom download directory
     def set_download_directory(self, directory):
