@@ -1,3 +1,5 @@
+import threading
+
 import pytube
 import os
 
@@ -10,10 +12,12 @@ class Downloader:
         self.__mp3_mode = False
         self.__directory = self.__get_default_download_path()
         self.__vids = {}
+        self.__thread_pool = []
 
     # sets the video to download by its url
     def add_video(self, url):
-        self.__yt = pytube.YouTube(url)
+        # pass in the call back function so it updates
+        self.__yt = pytube.YouTube(url, on_progress_callback=self.progress_function)
         video = self.__yt.streams.all()
         key = video[self.__choice].default_filename
         if key in self.__vids.keys():
@@ -63,11 +67,15 @@ class Downloader:
         else:
             return os.path.join(os.path.expanduser('~'), 'downloads')
 
-    # last step, download
-    def download(self):
+
+    # last step, download serially, one at a time which is slow but little room for bugs
+    def download_in_serial(self):
         if self.videos_empty():
             print("\nneed to add url")
             raise Exception("No videos in the list")
+
+        # update number of downloads, since it is serial, it will just add a place holder for thread pool
+        self.__thread_pool.append('place holder')
         for key, value in self.__vids.items():
             downloaded_file = os.path.join(self.__directory, value[self.__choice].default_filename)
             mp3_file = downloaded_file[:-4] + '.mp3'
@@ -75,15 +83,58 @@ class Downloader:
             value[self.__choice].download(self.__directory)
             # this converts the mp4 video tp mp3 then delete the mp4 if the mp3 mode is on
             if self.__mp3_mode is True:
-                print('converting ' + downloaded_file + ' to mp3....')
+                print('\nconverting ' + downloaded_file + ' to mp3....')
                 if os.path.exists(mp3_file):
                     os.remove(mp3_file)
                 os.rename(downloaded_file, mp3_file)
-            print('Finished downloading ' + key)
-
                 # below is for removing the original mp4, doesn't need becuase we are just gonna rename the file to mp3 instead of actually converting
                 # subprocess.run(['rm', os.path.join(self.__directory, downloaded_file)])
+            print('Finished downloading ' + key)
+        # update he number of downloads still in progress
+        self.__thread_pool.pop()
 
+    # last step, downloading using threads, faster but error and bug prone.
+    def download_in_parallel(self):
+        if self.videos_empty():
+            print("\nneed to add url")
+            raise Exception("No videos in the list")
+        for key, value in self.__vids.items():
+            value[self.__choice].download(self.__directory)
+            thread = threading.Thread(target=self.__parallel_download_thread_function, name='Parallel download thread', args=(key, value))
+            # this keeps rack how much threads are currently downloading
+            self.__thread_pool.append(thread)
+            thread.start()
+
+
+    def __parallel_download_thread_function(self, file_name, video):
+        downloaded_file = os.path.join(self.__directory, video[self.__choice].default_filename)
+        mp3_file = downloaded_file[:-4] + '.mp3'
+        print('Downloading ' + downloaded_file + '....')
+        video[self.__choice].download(self.__directory)
+        # this converts the mp4 video tp mp3 then delete the mp4 if the mp3 mode is on
+        if self.__mp3_mode is True:
+            print('\nconverting ' + downloaded_file + ' to mp3....')
+            if os.path.exists(mp3_file):
+                os.remove(mp3_file)
+            os.rename(downloaded_file, mp3_file)
+            # below is for removing the original mp4, doesn't need becuase we are just gonna rename the file to mp3 instead of actually converting
+            # subprocess.run(['rm', os.path.join(self.__directory, downloaded_file)])
+        print('Finished downloading ' + file_name)
+        # this updates the number of downloads still in progress
+        self.__thread_pool.pop()
+
+    def get_number_of_downloads_in_progress(self):
+        return len(self.__thread_pool)
+
+
+
+
+    # this function will update the downloading progress
+    def progress_function(self,stream, chunk,file_handle, bytes_remaining):
+        size = len(chunk) + bytes_remaining
+        # Gets the percentage of the file that has been downloaded.
+        percent = (100 * (size - bytes_remaining)) / size
+        print("{:00.0f}% downloaded".format(percent))
 
 
 
@@ -95,4 +146,4 @@ if __name__ == '__main__':
     downloader.mp3_mode_on(True)
     downloader.display_download_choices()
     downloader.set_video_choice(0)
-    downloader.download()
+    downloader.download_in_serial()

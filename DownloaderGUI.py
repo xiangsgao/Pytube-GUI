@@ -1,3 +1,5 @@
+import threading
+
 from PyQt5 import QtCore
 from PyQt5.QtCore import QObject
 from PyQt5.QtWidgets import QMainWindow, QLayout, QListWidgetItem
@@ -13,6 +15,7 @@ from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QFileDialog
 from ThreadWorker import ParserWorker
+import time
 
 class DownloaderMainWindow(QMainWindow, QObject):
 
@@ -56,9 +59,34 @@ class DownloaderMainWindow(QMainWindow, QObject):
     def download_button_clicked(self):
         if len(self.__parsing_waitlist) != 0:
             print(str(len(self.__parsing_waitlist)))
-            QMessageBox.about(self, "Alert", "Wait for urls to finish parsing and remove the invalid links")
+            QMessageBox.about(self, "Alert", "Wait for urls to finish parsing. Also remove the invalid and duplicated links first.")
             return
-        self.__download_manager.download()
+        # using native python thread to spun downloads. QThread is a pain in the ass
+        thread = threading.Thread(target=self.__download_button_thread_function, name='Download button clicked thread',args=())
+        thread.start()
+
+    def __download_button_thread_function(self):
+        print('\nStarting download in parallel.....')
+        # disables all the control until download finishes
+        self.__ui.add_button.setEnabled(False)
+        self.__ui.remove_button.setEnabled(False)
+        self.__ui.browse_button.setEnabled(False)
+        self.__ui.download_button.setEnabled(False)
+        self.__ui.download_button.setText('Downloading.....')
+        self.__ui.checkbox.setEnabled(False)
+        # download
+        self.__download_manager.download_in_parallel()
+        # turn control back on once the download manager finishes downloading
+        while self.__download_manager.get_number_of_downloads_in_progress() == 0:
+            time.sleep(1)
+        self.__ui.add_button.setEnabled(True)
+        self.__ui.remove_button.setEnabled(True)
+        self.__ui.browse_button.setEnabled(True)
+        self.__ui.download_button.setEnabled(True)
+        self.__ui.download_button.setText('Download')
+        self.__ui.checkbox.setEnabled(True)
+        print('\nDone!')
+
 
 
 
@@ -73,28 +101,28 @@ class DownloaderMainWindow(QMainWindow, QObject):
 
 
     def add_button_clicked(self):
-            self.__ui.video_list.addItem("Parsing url...")
-            item_position =  self.__ui.video_list.count() - 1
-            item = self.__ui.video_list.item(item_position)
-            name = self.__ui.url_line_edit.text()
-            if self.__ui.download_button.isHidden():
-                self.show_list()
+        self.__ui.video_list.addItem("Parsing url...")
+        item_position =  self.__ui.video_list.count() - 1
+        item = self.__ui.video_list.item(item_position)
+        name = self.__ui.url_line_edit.text()
+        if self.__ui.download_button.isHidden():
+            self.show_list()
 
-            # add the video to the wait list so download button knows if its url is invalid or still waiting to be parse
-            self.__parsing_waitlist.append(item)
+        # add the video to the wait list so download button knows if its url is invalid or still waiting to be parse
+        self.__parsing_waitlist.append(item)
 
-            # creating the parser worker which can emit signals for ui thead to update widgets, also need to scope it to an instance else thread will malfunction lol, fuck python
-            self.worker = ParserWorker(item, name, self)
-            # creating thread object
-            thread = QtCore.QThread()
-            # add threads to the thread list because pyqt5 will annoyingly destroy ui thread if the thread object is garbabged collected cuz these threads do not die for some reason
-            self.__threads.append(thread)
-            # moved worker to a thread so workers work is multithreaded
-            self.worker.moveToThread(thread)
-            # have thread execute worker's work whenever it is started
-            thread.started.connect(self.worker.run)
-            # start the worker
-            thread.start()
+        # creating the parser worker which can emit signals for ui thead to update widgets, also need to scope it to an instance else thread will malfunction lol, fuck python
+        self.worker = ParserWorker(item, name, self)
+        # creating thread object
+        thread = QtCore.QThread()
+        # add threads to the thread list because pyqt5 will annoyingly destroy ui thread if the thread object is garbabged collected cuz these threads do not die for some reason
+        self.__threads.append(thread)
+        # moved worker to a thread so workers work is multithreaded
+        self.worker.moveToThread(thread)
+        # have thread execute worker's work whenever it is started
+        thread.started.connect(self.worker.run)
+        # start the worker
+        thread.start()
 
 
     def parse_Url_Function(self, item, url):
