@@ -10,11 +10,11 @@ from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QCheckBox
 from PyQt5.QtWidgets import QListWidget
-from src.Downloader import Downloader
+from Downloader import Downloader
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QFileDialog
-from src.ThreadWorker import ParserWorker
+from ThreadWorker import ParserWorker
 import time
 
 class DownloaderMainWindow(QMainWindow, QObject):
@@ -25,7 +25,6 @@ class DownloaderMainWindow(QMainWindow, QObject):
 
     def __init__(self,   download_manager=Downloader()):
         super().__init__()
-        print('Initializing GUI....')
         self.setWindowTitle("Pytube-GUI")
         self.__download_manager = download_manager
 
@@ -52,6 +51,7 @@ class DownloaderMainWindow(QMainWindow, QObject):
         self.PARSE_URL_SIGNAL.connect(self.set_list_widget_text)
         self.__threads = []
         self.__parsing_waitlist = []
+        print('GUI initialized')
 
 
 
