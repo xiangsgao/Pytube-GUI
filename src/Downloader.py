@@ -2,7 +2,7 @@ import threading
 
 import pytube
 import os
-
+import math
 class Downloader:
 
 
@@ -112,7 +112,6 @@ class Downloader:
             print("\nneed to add url")
             raise Exception("No videos in the list")
         for key, value in self.__vids.items():
-            value[self.__choice].download(self.__directory)
             thread = threading.Thread(target=self.__parallel_download_thread_function, name='Parallel download thread', args=(key, value))
             # this keeps rack how much threads are currently downloading
             self.__thread_pool.append(thread)
@@ -144,10 +143,10 @@ class Downloader:
 
     # this function will update the downloading progress
     def progress_function(self,stream, chunk,file_handle, bytes_remaining):
-        size = len(chunk) + bytes_remaining
-        # Gets the percentage of the file that has been downloaded.
-        percent = (100 * (size - bytes_remaining)) / size
-        print(stream.default_filename + ": {:00.0f}% downloaded".format(percent))
+        bytes_downloaded = file_handle.tell()
+        total_bytes = bytes_remaining + bytes_downloaded
+        percent_downloaded = math.floor((bytes_downloaded / total_bytes) * 100)
+        print(stream.default_filename + ": " + str(percent_downloaded) + '%')
 
 
 
@@ -159,5 +158,5 @@ if __name__ == '__main__':
     downloader.mp3_mode_on(True)
     downloader.display_download_choices()
     downloader.set_video_choice(0)
-    downloader.use_multithreading(True)
+    downloader.use_multithreading(False)
     downloader.download()
