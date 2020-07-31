@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/xgao/PycharmProjects/YouTube_Downloader/venv"
+set -gx VIRTUAL_ENV "/run/media/xgao/Sandisk/Hacking Stuffs/Pytube-GUI/venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

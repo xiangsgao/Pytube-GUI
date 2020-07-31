@@ -14,7 +14,7 @@ from Downloader import Downloader
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QFileDialog
-from ThreadWorker import ParserWorker
+from UrlParserWorker import ParserWorker
 import time
 
 class DownloaderMainWindow(QMainWindow, QObject):

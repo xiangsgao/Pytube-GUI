@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/YouTube_Downloader.iml" filepath="$PROJECT_DIR$/.idea/YouTube_Downloader.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Pytube-GUI.iml" filepath="$PROJECT_DIR$/.idea/Pytube-GUI.iml" />
     </modules>
   </component>
 </project>
